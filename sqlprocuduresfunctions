@@ -1,0 +1,23 @@
+sql query for the first task to print the cost value of a specific order based on the user input of the OrderID. 
+
+create function FindCost(order_id INT) 
+returns decimal (5,2) DETERMINISTIC 
+return (select Cost from Orders where OrderID = order_id);
+
+
+sql query for the second task to create a stored procedure that return the final cost of the customer’s order after the discount value has been deducted.
+The discount value is based on the order’s quantity. The stored procedure must have the following specifications:
+-If the value of the order quantity is more than or equal to 20 then the procedure should return the new cost after a 20% discount. 
+-If the value of the order quantity is less than 20 and more than or equal to 10 then the procedure should return the new cost after a 10% discount.
+
+delimiter // 
+create Procedure GetDiscount(OrderIDInput INT) 
+BEGIN declare cost_after_discount DECIMAL(7,2); declare current_cost DECIMAL(7,2); declare order_quantity INT; 
+select Quantity into order_quantity from Orders WHERE OrderID = OrderIDInput; 
+select Cost into current_cost FROM Orders WHERE OrderID = OrderIDInput; 
+if order_quantity >= 20 THEN set cost_after_discount = current_cost - (current_cost * 0.2);              
+elseif (order_quantity >= 10) THEN set cost_after_discount = current_cost - (current_cost * 0.1); 
+else set cost_after_discount = current_cost;  end if;
+select cost_after_discount; end//
+delimiter ;
+
